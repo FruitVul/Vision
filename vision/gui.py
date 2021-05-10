@@ -12,7 +12,7 @@ import numpy as np
 import webbrowser
 
 
-from vision.config import path_unlabled, path_labled, path_used, path_skipped
+from vision.config import path_unlabled, path_labled, path_used, path_skipped, ROOT
 from vision.dop import get_from_folder, crs_transform
 
 
@@ -37,11 +37,11 @@ class VisionLabelling(QtWidgets.QMainWindow):
         self.imgw = QtWidgets.QLabel(self)
         self.imgw.setGeometry(200, 0, 500, 500)
         self.image, self.gitter_id = self.set_image()
+
         self.home()
 
     def home(self):
-
-        btn=QtWidgets.QPushButton("Quit", self)
+        btn = QtWidgets.QPushButton("Quit", self)
         btn.clicked.connect(self.close_app)
         btn.resize(btn.minimumSizeHint())
         btn.move(30, 550)
@@ -64,7 +64,7 @@ class VisionLabelling(QtWidgets.QMainWindow):
 
         for cls, loc in classes.items():
             btn = QtWidgets.QPushButton(cls, self)
-            btn.clicked.connect(lambda: self.classify(cl=loc[3]))
+            btn.clicked.connect(lambda: self.classify(cl=loc[2]))
             btn.move(loc[0], loc[1])
 
         btn = QtWidgets.QPushButton("Skip", self)
@@ -165,3 +165,6 @@ class VisionLabelling(QtWidgets.QMainWindow):
         lat = str(self.long_lat[1])
         url = f"http://maps.google.com/maps?t=k&q=loc:{lat}+{long}"
         webbrowser.open(url)
+
+    def display_examples(self):
+        pass
