@@ -1,5 +1,6 @@
 # Functions for the processing of DOP - Images
 import numpy as np
+from pyproj import Proj, transform
 import os, random
 
 
@@ -26,3 +27,17 @@ def get_rgb_img(tif_dop):
 
     return rgb_img
 
+
+def crs_transform(coords, initial_crs, target_crs):
+    """
+    Transforms coordinates from one projection to another
+    :param coords: Coordinates as tuple
+    :param initial_crs: The initial coordinate reference system
+    :param target_crs: The target coordinate reference system
+    :return proj_coords: The transformed coordinates
+    """
+
+    in_proj = Proj(init=initial_crs)
+    out_proj = Proj(init=target_crs)
+    proj_coords = transform(in_proj, out_proj, coords[0], coords[1])
+    return proj_coords

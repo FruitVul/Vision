@@ -9,9 +9,11 @@ import sys
 import os
 import PIL.Image as Image
 import numpy as np
+import webbrowser
+
 
 from vision.config import path_unlabled, path_labled, path_used, path_skipped
-from vision.dop import get_from_folder
+from vision.dop import get_from_folder, crs_transform
 
 
 class VisionLabelling(QtWidgets.QMainWindow):
@@ -21,6 +23,7 @@ class VisionLabelling(QtWidgets.QMainWindow):
         super().__init__()
 
         self.i_classified = 0
+        self.long_lat = (0, 0)
 
         self.setGeometry(50, 50, 800, 600)
         self.setFixedSize(800, 600)
@@ -70,9 +73,14 @@ class VisionLabelling(QtWidgets.QMainWindow):
         btn.clicked.connect(lambda: self.skip())
         btn.move(660, 450)
 
+        btn = QtWidgets.QPushButton("Open in GMAPS", self)
+        btn.clicked.connect(lambda: self.open_gmaps())
+        btn.move(660, 350)
+
         self.textbox = QLineEdit(self)
         self.textbox.move(200, 460)
         self.textbox.resize(400, 25)
+
         self.update_textbox()
 
         self.show()
@@ -130,7 +138,10 @@ class VisionLabelling(QtWidgets.QMainWindow):
 
     def set_image(self):
         img_name = get_from_folder(path_unlabled)
+        gitter_id, self.long_lat = self.get_metadata(img_name)
         image = Image.open(os.path.join(path_unlabled, img_name))
+        image = image.transpose(Image.FLIP_TOP_BOTTOM)
+        image = image.rotate(270)
         im = np.transpose(image, (1, 0, 2)).copy()
         qimage = QImage(im, im.shape[1], im.shape[0], QImage.Format_RGB888)
         pixmap = QPixmap(qimage)
@@ -140,6 +151,19 @@ class VisionLabelling(QtWidgets.QMainWindow):
 
     def get_metadata(self, img_name):
         gitter_id = img_name.split(".")[0]
-        return gitter_id
+        long_lat = self.get_long_lat(gitter_id)
 
+        return gitter_id, long_lat
 
+    def get_long_lat(self, gitter_id):
+        split = gitter_id.replace("100m", "").split("E")
+        n = int((split[0]+"00").replace("N", ""))
+        e = int(split[1]+"00")
+        long_lat = crs_transform((e, n), "EPSG:25832", "EPSG:4326")
+        return long_lat
+
+    def open_gmaps(self):
+        long = str(self.long_lat[0])
+        lat = str(self.long_lat[1])
+        url = f"http://maps.google.com/maps?t=k&q=loc:{lat}+{long}"
+        webbrowser.open(url)
