@@ -147,7 +147,7 @@ class VisionLabelling(QtWidgets.QMainWindow):
         pixmap = QPixmap(qimage)
         pixmap = pixmap.scaled(400, 400, Qt.KeepAspectRatio)
         self.imgw.setPixmap(pixmap)
-        return image, self.get_metadata(img_name)
+        return image, gitter_id
 
     def get_metadata(self, img_name):
         gitter_id = img_name.split(".")[0]
