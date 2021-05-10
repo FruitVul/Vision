@@ -52,22 +52,20 @@ class VisionLabelling(QtWidgets.QMainWindow):
 
         distance = 150
 
-        classes = {"Freistehend": (x_start, y_upper_row),
-                   "EFH/ZFH/DH": (x_start + distance*1, y_upper_row),
-                   "MFH": (x_start + distance*2, y_upper_row),
-                   "Zeilenbebauung": (x_start + distance*3, y_upper_row),
-                   "Hochhäuser": (x_start, y_lower_row),
-                   "Blockbebauung": (x_start + distance*1, y_lower_row),
-                   "Industrie/Gewerbe": (x_start + distance*2, y_lower_row),
-                   "L.schaft/Wasser": (x_start + distance*3, y_lower_row),
-                   "Sonstiges": (x_start + distance*2 - 80, y_lower_row + 30)}
+        classes = {"Freistehend": (x_start, y_upper_row, 0),
+                   "EFH/ZFH/DH": (x_start + distance*1, y_upper_row, 1),
+                   "MFH": (x_start + distance*2, y_upper_row, 2),
+                   "Zeilenbebauung": (x_start + distance*3, y_upper_row, 3),
+                   "Hochhäuser": (x_start, y_lower_row, 4),
+                   "Blockbebauung": (x_start + distance*1, y_lower_row, 5),
+                   "Industrie/Gewerbe": (x_start + distance*2, y_lower_row, 6),
+                   "L.schaft/Wasser": (x_start + distance*3, y_lower_row, 7),
+                   "Sonstiges": (x_start + distance*2 - 80, y_lower_row + 30, 8)}
 
-        i_cls = 0
         for cls, loc in classes.items():
             btn = QtWidgets.QPushButton(cls, self)
-            btn.clicked.connect(lambda: self.classify(cl=i_cls))
+            btn.clicked.connect(lambda: self.classify(cl=loc[3]))
             btn.move(loc[0], loc[1])
-            i_cls += 1
 
         btn = QtWidgets.QPushButton("Skip", self)
         btn.clicked.connect(lambda: self.skip())
