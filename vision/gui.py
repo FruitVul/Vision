@@ -43,41 +43,28 @@ class VisionLabelling(QtWidgets.QMainWindow):
         btn.resize(btn.minimumSizeHint())
         btn.move(30, 550)
 
-        btn = QtWidgets.QPushButton("Freistehend", self)
-        btn.clicked.connect(lambda: self.classify(cl=0))
-        btn.move(150, 500)
+        x_start = 150
+        y_upper_row = 500
+        y_lower_row = 530
 
-        btn = QtWidgets.QPushButton("EFH/ZFH", self)
-        btn.clicked.connect(lambda: self.classify(cl=1))
-        btn.move(300, 500)
+        distance = 150
 
-        btn = QtWidgets.QPushButton("MFH/DH", self)
-        btn.clicked.connect(lambda: self.classify(cl=2))
-        btn.move(450, 500)
+        classes = {"Freistehend": (x_start, y_upper_row),
+                   "EFH/ZFH/DH": (x_start + distance*1, y_upper_row),
+                   "MFH": (x_start + distance*2, y_upper_row),
+                   "Zeilenbebauung": (x_start + distance*3, y_upper_row),
+                   "Hochhäuser": (x_start, y_lower_row),
+                   "Blockbebauung": (x_start + distance*1, y_lower_row),
+                   "Industrie/Gewerbe": (x_start + distance*2, y_lower_row),
+                   "L.schaft/Wasser": (x_start + distance*3, y_lower_row),
+                   "Sonstiges": (x_start + distance*2 - 80, y_lower_row + 30)}
 
-        btn = QtWidgets.QPushButton("Zeilenbebauung / gr. MFH", self)
-        btn.clicked.connect(lambda: self.classify(cl=3))
-        btn.move(600,  500)
-
-        btn = QtWidgets.QPushButton("Block/Hochhäuser",self)
-        btn.clicked.connect(lambda: self.classify(cl=4))
-        btn.move(150, 530)
-
-        btn = QtWidgets.QPushButton("Industrie/Gewerbe", self)
-        btn.clicked.connect(lambda: self.classify(cl=5))
-        btn.move(300, 530)
-
-        btn = QtWidgets.QPushButton("Landschaft/Wasser", self)
-        btn.clicked.connect(lambda: self.classify(cl=6))
-        btn.move(450, 530)
-
-        btn = QtWidgets.QPushButton("Infrastruktur", self)
-        btn.clicked.connect(lambda: self.classify(cl=7))
-        btn.move(600, 530)
-
-        btn = QtWidgets.QPushButton("Skip", self)
-        btn.clicked.connect(lambda: self.skip())
-        btn.move(660, 450)
+        i_cls = 0
+        for cls, loc in classes.items():
+            btn = QtWidgets.QPushButton(cls, self)
+            btn.clicked.connect(lambda: self.classify(cl=i_cls))
+            btn.move(loc[0], loc[1])
+            i_cls += 1
 
         self.textbox = QLineEdit(self)
         self.textbox.move(200, 460)
