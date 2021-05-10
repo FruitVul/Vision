@@ -66,6 +66,10 @@ class VisionLabelling(QtWidgets.QMainWindow):
             btn.move(loc[0], loc[1])
             i_cls += 1
 
+        btn = QtWidgets.QPushButton("Skip", self)
+        btn.clicked.connect(lambda: self.skip())
+        btn.move(660, 450)
+
         self.textbox = QLineEdit(self)
         self.textbox.move(200, 460)
         self.textbox.resize(400, 25)
