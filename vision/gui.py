@@ -62,10 +62,42 @@ class VisionLabelling(QtWidgets.QMainWindow):
                    "L.schaft/Wasser": (x_start + distance*3, y_lower_row, 7),
                    "Sonstiges": (x_start + distance*2 - 80, y_lower_row + 30, 8)}
 
-        for cls, loc in classes.items():
-            btn = QtWidgets.QPushButton(cls, self)
-            btn.clicked.connect(lambda: self.classify(cl=loc[2]))
-            btn.move(loc[0], loc[1])
+
+        btn = QtWidgets.QPushButton("Freistehend", self)
+        btn.clicked.connect(lambda: self.classify(cl=classes["Freistehend"][2]))
+        btn.move(classes["Freistehend"][0], classes["Freistehend"][1])
+
+        btn = QtWidgets.QPushButton("EFH/ZFH/DH", self)
+        btn.clicked.connect(lambda: self.classify(cl=classes["EFH/ZFH/DH"][2]))
+        btn.move(classes["EFH/ZFH/DH"][0], classes["EFH/ZFH/DH"][1])
+
+        btn = QtWidgets.QPushButton("MFH", self)
+        btn.clicked.connect(lambda: self.classify(cl=classes["MFH"][2]))
+        btn.move(classes["MFH"][0], classes["MFH"][1])
+
+        btn = QtWidgets.QPushButton("Zeilenbebauung", self)
+        btn.clicked.connect(lambda: self.classify(cl=classes["Zeilenbebauung"][2]))
+        btn.move(classes["Zeilenbebauung"][0], classes["Zeilenbebauung"][1])
+
+        btn = QtWidgets.QPushButton("Hochhäuser", self)
+        btn.clicked.connect(lambda: self.classify(cl=classes["Hochhäuser"][2]))
+        btn.move(classes["Hochhäuser"][0], classes["Hochhäuser"][1])
+
+        btn = QtWidgets.QPushButton("Blockbebauung", self)
+        btn.clicked.connect(lambda: self.classify(cl=classes["Blockbebauung"][2]))
+        btn.move(classes["Blockbebauung"][0], classes["Blockbebauung"][1])
+
+        btn = QtWidgets.QPushButton("Industrie/Gewerbe", self)
+        btn.clicked.connect(lambda: self.classify(cl=classes["Industrie/Gewerbe"][2]))
+        btn.move(classes["Industrie/Gewerbe"][0], classes["Industrie/Gewerbe"][1])
+
+        btn = QtWidgets.QPushButton("L.schaft/Wasser", self)
+        btn.clicked.connect(lambda: self.classify(cl=classes["L.schaft/Wasser"][2]))
+        btn.move(classes["L.schaft/Wasser"][0], classes["L.schaft/Wasser"][1])
+
+        btn = QtWidgets.QPushButton("Sonstiges", self)
+        btn.clicked.connect(lambda: self.classify(cl=classes["Sonstiges"][2]))
+        btn.move(classes["Sonstiges"][0], classes["Sonstiges"][1])
 
         btn = QtWidgets.QPushButton("Skip", self)
         btn.clicked.connect(lambda: self.skip())
@@ -87,7 +119,7 @@ class VisionLabelling(QtWidgets.QMainWindow):
         files_remaining = os.listdir(path=path_unlabled)
         self.i_classified += 1
         self.update_textbox()
-
+        print(cl)
         if len(files_remaining) > 0:
             img_save_name = f"{self.gitter_id}_{str(cl)}.png"
             self.image.save(os.path.join(path_labled, img_save_name))
