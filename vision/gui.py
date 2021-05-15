@@ -3,6 +3,7 @@ from PyQt5.QtGui import QImage, QPalette, QBrush
 from PyQt5.QtWidgets import QApplication, QWidget, QInputDialog, QLineEdit,QPushButton, QCheckBox
 from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QPixmap
+from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtCore import Qt
 import shutil
 import sys
@@ -111,6 +112,12 @@ class VisionLabelling(QtWidgets.QMainWindow):
         self.textbox.move(200, 460)
         self.textbox.resize(400, 25)
 
+        self.line = QLineEdit(self)
+        self.line.move(660, 100)
+        btn = QtWidgets.QPushButton("Submit other!", self)
+        btn.clicked.connect(lambda: self.submit_other())
+        btn.move(660, 150)
+
         self.update_textbox()
 
         self.show()
@@ -119,11 +126,10 @@ class VisionLabelling(QtWidgets.QMainWindow):
         files_remaining = os.listdir(path=path_unlabled)
         self.i_classified += 1
         self.update_textbox()
-        print(cl)
+
         if len(files_remaining) > 0:
             img_save_name = f"{self.gitter_id}_{str(cl)}.png"
             self.image.save(os.path.join(path_labled, img_save_name))
-
             prev_img_path = os.path.join(path_unlabled, f"{self.gitter_id}.jpeg")
             new_img_path = os.path.join(path_used, f"{self.gitter_id}.jpeg")
             shutil.move(prev_img_path, new_img_path)
@@ -197,6 +203,19 @@ class VisionLabelling(QtWidgets.QMainWindow):
         lat = str(self.long_lat[1])
         url = f"http://maps.google.com/maps?t=k&q=loc:{lat}+{long}"
         webbrowser.open(url)
+
+    def submit_other(self):
+        txt = self.line.text()
+
+        if " " in txt or "" in txt:
+            msg = QMessageBox()
+            msg.setWindowTitle("Error submitting.")
+            msg.setText("Please remove any spaces or exchange with underscores !!")
+            x = msg.exec()
+        else:
+            self.classify(cl=txt)
+
+        self.line.setText("")
 
     def display_examples(self):
         pass
