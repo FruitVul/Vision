@@ -207,7 +207,8 @@ class VisionLabelling(QtWidgets.QMainWindow):
     def submit_other(self):
         txt = self.line.text()
 
-        if " " in txt or "" in txt:
+        if " " in txt or not txt:
+            print(txt)
             msg = QMessageBox()
             msg.setWindowTitle("Error submitting.")
             msg.setText("Please remove any spaces or exchange with underscores !!")
